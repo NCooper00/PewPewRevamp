@@ -4,6 +4,7 @@ public class Player_Control : MonoBehaviour
 {
 
     public float Speed = 5f;
+    public float BoostSpeedMult = 1.5f;
     public float TurnSpeed = 10f;
     public float TurnDeg = 0.25f;
     public float BoostSpeed = 2f;
@@ -11,6 +12,7 @@ public class Player_Control : MonoBehaviour
     public Quaternion Rotate;
 
     private bool Moving = false;
+    private bool Boosting = false;
     private bool Turning = false;
 
 
@@ -43,6 +45,12 @@ public class Player_Control : MonoBehaviour
             Moving = false; 
         }
 
+        if (Input.GetKey(KeyCode.LeftShift) && movement.y > 0) {
+            Boosting = true;
+        } else {
+            Boosting = false;
+        }
+
 
 
         movement.x = Input.GetAxisRaw("Horizontal");
@@ -57,6 +65,8 @@ public class Player_Control : MonoBehaviour
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
+
+        animator.SetBool("boosting", Boosting);
     }
 
     void FixedUpdate() {
@@ -72,8 +82,10 @@ public class Player_Control : MonoBehaviour
             // Rotate.z = Quaternion(0, 0, TurnSpeed * x);
             _rigidbody.AddTorque(impulse, ForceMode2D.Impulse);
         }
-        if (Moving) {
+        if (Moving && !Boosting) {
             _rigidbody.AddForce(transform.up * Speed * y);
+        } else if (Moving && Boosting) {
+            _rigidbody.AddForce(transform.up * (Speed * BoostSpeedMult) * y);
         }
 
     }
