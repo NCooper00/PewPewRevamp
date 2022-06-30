@@ -39,8 +39,7 @@ public class PlasmaBullet : MonoBehaviour
         if (enemy != null) {
             enemy.TakeDamage(bulletDamage);
         }
-
-        Debug.Log(hitInfo.gameObject.layer);
+        
         if (hitInfo.gameObject.layer != 6) {
             anim.SetBool("hit", true);
             rb.velocity = new Vector2(0f, 0f);

@@ -18,11 +18,13 @@ public class Player_Control : MonoBehaviour
 
     private Rigidbody2D _rigidbody;
     public Animator animator;
+    public AudioManager audio;
 
     Vector2 movement;
 
     void Awake() {
         _rigidbody = GetComponent<Rigidbody2D>();
+        audio = FindObjectOfType<AudioManager>().GetComponent<AudioManager>();
     }
 
     void Start()

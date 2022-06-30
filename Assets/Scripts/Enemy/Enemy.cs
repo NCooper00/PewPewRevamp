@@ -5,34 +5,38 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Animator anim;
-
+    private Rigidbody2D rb;
     public GameObject player;
 
     public int Health = 100;
     public int Damage = 15;
+    public float Speed = 10f;
 
     public float offset = 0f;
 
     private Transform playerPos;
 
+    private float enemyRot;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        rb = GetComponent<Rigidbody2D>();
         playerPos = player.GetComponent<Transform>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        Vector3 difference = playerPos.position - transform.position;
-        difference.Normalize();
-        float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, rotation_z + offset);
+    private void Start() {
+        anim.SetBool("flying", true);
+    }
 
-        // Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        // difference.Normalize();
-        // float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        // transform.rotation = Quaternion.Euler(0f, 0f, rotation_z + offset);
+    private void FixedUpdate() {
+        Vector3 difference = playerPos.position - rb.transform.position;
+        difference.Normalize();
+        enemyRot = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+        rb.transform.rotation = Quaternion.Euler(0f, 0f, enemyRot + offset);
+
+        rb.AddForce(transform.up * Speed);
+
     }
 
     public void TakeDamage(int damage) {
@@ -46,6 +50,7 @@ public class Enemy : MonoBehaviour
 
     void Die() {
         anim.SetBool("dead", true);
+        anim.SetBool("flying", false);
     }
 
     public void DestroyObject() {
