@@ -72,14 +72,9 @@ public class Player_Control : MonoBehaviour
     void FixedUpdate() {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-        // var impulse = ((-1 * x) * Mathf.Deg2Rad) * _rigidbody.inertia;
         var impulse = ((TurnDeg * -x) * Mathf.Deg2Rad) * _rigidbody.inertia;
 
-        // TurnSpeed = _rigidbody.angularVelocity.magnitude * Mathf.Rad2Deg;
-        // float p = _rigidbody.GetRelativePoint((0, y));
-
         if (Turning) {
-            // Rotate.z = Quaternion(0, 0, TurnSpeed * x);
             _rigidbody.AddTorque(impulse, ForceMode2D.Impulse);
         }
         if (Moving && !Boosting) {
